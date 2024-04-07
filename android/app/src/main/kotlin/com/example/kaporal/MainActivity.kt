@@ -1,0 +1,5 @@
+package com.example.kaporal
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()
