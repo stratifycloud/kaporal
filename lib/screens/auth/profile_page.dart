@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kaporal/services/auth.dart';
+import 'package:kaporal/ui_components/custom_app_bar.dart';
 import 'package:kaporal/ui_components/profile_picture.dart';
 import 'package:kaporal/ui_components/ui_specs.dart';
 
@@ -18,14 +18,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   double widgetWidthRatio = 1.25;
   @override
-  Future<void> initState() async {
+  initState() {
     super.initState();
-    user = await AuthService.user.first;
+    user = FirebaseAuth.instance.currentUser;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

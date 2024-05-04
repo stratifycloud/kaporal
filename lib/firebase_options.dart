@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '101002658268',
     projectId: 'kube-kaporal',
     authDomain: 'kube-kaporal.firebaseapp.com',
+    databaseURL: 'https://kube-kaporal-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'kube-kaporal.appspot.com',
   );
 
@@ -60,6 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:101002658268:android:c954fd4f157eaeffcecf19',
     messagingSenderId: '101002658268',
     projectId: 'kube-kaporal',
+    databaseURL: 'https://kube-kaporal-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'kube-kaporal.appspot.com',
   );
 
@@ -68,6 +70,7 @@ class DefaultFirebaseOptions {
     appId: '1:101002658268:ios:c46bcaa2493b1370cecf19',
     messagingSenderId: '101002658268',
     projectId: 'kube-kaporal',
+    databaseURL: 'https://kube-kaporal-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'kube-kaporal.appspot.com',
     iosBundleId: 'com.example.kaporal',
   );

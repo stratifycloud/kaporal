@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kaporal/services/constants.dart';
+import 'package:kaporal/services/firestore.dart';
 
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -29,7 +30,7 @@ class AuthService {
         case 'invalid-credential':
           return 'An user with this e-mail/password was not found.';
         default:
-        return 'There was a problem trying to sign you in.';
+          return 'There was a problem trying to sign you in.';
       }
     }
     return "success";
@@ -46,8 +47,7 @@ class AuthService {
       User? user = result.user;
       if (user != null && user.email != null) {
         try {
-          // await SqlService.addUserToDatabase(
-          //     user.uid, user.email!, false, '', '', '', '', '');
+          await FirestoreService.addUser(user);
         } catch (e) {
           await user.delete();
           return 'Registration failed';

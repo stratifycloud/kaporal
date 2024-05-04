@@ -4,6 +4,24 @@ import 'package:flutter/rendering.dart';
 import 'package:kaporal/models/common/cluster.dart';
 import 'package:kaporal/ui_components/ui_specs.dart';
 
+class ClusterGrid extends StatelessWidget {
+  final List<Cluster> clusters;
+
+  const ClusterGrid({super.key, required this.clusters});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+            itemCount: clusters.length,
+            padding: const EdgeInsets.all(AppMargins.XL),
+            gridDelegate: ClusterGridDelegate(dimension: 240.0),
+            itemBuilder: (BuildContext context, int index) {
+              return ClusterGridTile(cluster: clusters[index],);
+            },
+          );
+  }
+}
+
 class ClusterGridTile extends StatelessWidget {
   final Cluster cluster;
   const   ClusterGridTile({super.key, required this.cluster});
