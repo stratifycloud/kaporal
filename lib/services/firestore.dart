@@ -25,7 +25,7 @@ class FirestoreService {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('provider-profiles');
 
-    providerProfiles.doc(profile.name).set(profile.toJson());
+    providerProfiles.doc(profile.uid).set(profile.toJson());
     // handleProviderSensitiveData(profile);
   }
 
@@ -57,5 +57,17 @@ class FirestoreService {
     }
 
     return providerProfiles;
+  }
+
+  static Map<String, List<String>> getAvailableFlavors() {
+    Map<String, List<String>> flavors = {};
+
+    // TODO: fetch from firestore
+    flavors = {
+      'aws': ['r5.xlarge', 't3.medium', 't3.xlarge'],
+      'azure': ['mock']
+    };
+
+    return flavors;
   }
 }

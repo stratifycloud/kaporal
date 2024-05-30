@@ -5,9 +5,11 @@ class AWSProviderProfile implements ProviderProfile {
   @override
   ProviderType providerType = ProviderType.aws;
 
+  @override
+  String? defaultMachineSize;
+
   // Only non-sensitive data is stored in this model
   String awsRegion;
-  String? defaultMachineSize;
   bool mfaEnabled;
 
   @override
@@ -19,8 +21,8 @@ class AWSProviderProfile implements ProviderProfile {
     required this.uid,
     required this.name,
     required this.awsRegion,
-    this.defaultMachineSize,
     this.mfaEnabled = false,
+    this.defaultMachineSize,
   });
 
   factory AWSProviderProfile.fromJson(Map<String, Object?> json) {

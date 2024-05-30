@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kaporal/models/providers/provider_type.dart';
 import 'package:kaporal/services/constants.dart';
-import 'package:kaporal/services/firestore.dart';
-import 'package:kaporal/ui_components/custom_app_bar.dart';
 import 'package:kaporal/ui_components/custom_button.dart';
 import 'package:kaporal/ui_components/custom_textfield.dart';
-import 'package:kaporal/ui_components/loading_snack_bar.dart';
 import 'package:kaporal/ui_components/ui_constants.dart';
 import 'package:kaporal/ui_components/ui_specs.dart';
 
 class CreateProviderProfile extends StatefulWidget {
-  const CreateProviderProfile({super.key});
+  final ProviderType providerType;
+
+  const CreateProviderProfile({super.key, required this.providerType});
 
   @override
   State<CreateProviderProfile> createState() => _CreateProviderProfileState();
@@ -33,15 +32,11 @@ class _CreateProviderProfileState extends State<CreateProviderProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    final ProviderType providerType = arguments['providerType'];
-
     String providerConfigurationPageRoute = '/';
     String providerLogoImageSource = 'assets/images/logo.png';
     List<String> availableRegions = [];
 
-    switch (providerType) {
+    switch (widget.providerType) {
       case ProviderType.aws:
         providerConfigurationPageRoute = '/configure-aws-provider';
         providerLogoImageSource = awsLogoPath;
@@ -62,99 +57,84 @@ class _CreateProviderProfileState extends State<CreateProviderProfile> {
         break;
     }
 
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Center(
-          child: SizedBox(
-            width: 300,
-            child: Padding(
-              padding: const EdgeInsets.all(AppMargins.M),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppMargins.M),
-                  child: Form(
-                      key: _createProviderProfileFormKey,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Padding(
-                                padding: EdgeInsets.all(AppMargins.M)),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width /
-                                  widthRatio,
-                              child: SvgPicture.asset(
-                                providerLogoImageSource,
-                                height: 100,
-                              ),
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.all(AppMargins.S)),
-                            Text(
-                              'Configure new ${providerType.name} provider:',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.all(AppMargins.S)),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width /
-                                  widthRatio,
-                              child: CustomTextField(
-                                label: "Name",
-                                validator: (val) {
-                                  if (val == null || val.trim().isEmpty) {
-                                    return "An name is required";
+    return SingleChildScrollView(
+      child: Center(
+        child: SizedBox(
+          width: 300,
+          child: Padding(
+            padding: const EdgeInsets.all(AppMargins.L),
+            child: Form(
+                key: _createProviderProfileFormKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Padding(padding: EdgeInsets.all(AppMargins.M)),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / widthRatio,
+                        child: SvgPicture.asset(
+                          providerLogoImageSource,
+                          height: 100,
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.all(AppMargins.S)),
+                      Text(
+                        'Configure new ${widget.providerType.name} provider:',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const Padding(padding: EdgeInsets.all(AppMargins.S)),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / widthRatio,
+                        child: CustomTextField(
+                          label: "Name",
+                          validator: (val) {
+                            if (val == null || val.trim().isEmpty) {
+                              return "An name is required";
+                            }
+                            // TODO: change regexp to support other chars (e.g. hyphens)
+                            if (!RegExp(r'\S+').hasMatch(val)) {
+                              return "The name must only contain alphanumeric values";
+                            }
+                            // Return null if the entered name is valid
+                            return null;
+                          },
+                          controller: _nameController,
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.all(AppMargins.XS)),
+                      DropdownSearch(
+                        items: availableRegions,
+                        onChanged: (String? item) {
+                          setState(() {
+                            _selectedRegion = item;
+                          });
+                        },
+                        selectedItem: _selectedRegion,
+                        validator: (String? item) {
+                          if (item == null ||
+                              !(availableRegions.contains(item))) {
+                            return "Please select a region";
+                          }
+                          return null;
+                        },
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(AppMargins.M),
+                          child: CustomButton(
+                              onPressed: () async {
+                                if (_createProviderProfileFormKey.currentState!
+                                    .validate()) {
+                                  if (mounted) {
+                                    Navigator.pushNamed(
+                                        context, providerConfigurationPageRoute,
+                                        arguments: {
+                                          'name': _nameController.text,
+                                          'region': _selectedRegion,
+                                        });
                                   }
-                                  // TODO: change regexp to support other chars (e.g. hyphens)
-                                  if (!RegExp(r'\S+').hasMatch(val)) {
-                                    return "The name must only contain alphanumeric values";
-                                  }
-                                  // Return null if the entered name is valid
-                                  return null;
-                                },
-                                controller: _nameController,
-                              ),
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.all(AppMargins.XS)),
-                            DropdownSearch(
-                              items: availableRegions,
-                              onChanged: (String? item) {
-                                setState(() {
-                                  _selectedRegion = item;
-                                });
+                                }
                               },
-                              selectedItem: _selectedRegion,
-                              validator: (String? item) {
-                                if (item == null ||
-                                    !(availableRegions.contains(item)))
-                                  return "Please select a region";
-                                return null;
-                              },
-                            ),
-                            Padding(
-                                padding: const EdgeInsets.all(AppMargins.M),
-                                child: CustomButton(
-                                    onPressed: () async {
-                                      if (_createProviderProfileFormKey
-                                          .currentState!
-                                          .validate()) {
-                                        if (mounted) {
-                                          Navigator.pushNamed(context,
-                                              providerConfigurationPageRoute,
-                                              arguments: {
-                                                'name': _nameController.text,
-                                                'region': _selectedRegion,
-                                              });
-                                        }
-                                      }
-                                    },
-                                    text: "Continue")),
-                          ])),
-                ),
-              ),
-            ),
+                              text: "Continue")),
+                    ])),
           ),
         ),
       ),

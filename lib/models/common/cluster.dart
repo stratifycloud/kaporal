@@ -9,9 +9,11 @@ class Cluster {
   Cluster({
     required String name,
     List<String>? labels,
+    String? type,
     required this.infrastructureRef,
   }) {
     metadata['name'] = name;
     metadata['labels'] = labels ?? <String>[];
+    metadata['type'] = type ?? "";
   }
 }

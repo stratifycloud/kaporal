@@ -44,34 +44,22 @@ class ProviderSelectionTile extends StatelessWidget {
           child: Card(
             color: Colors.white,
             child: ClipRect(
-              child: InkWell(
-                enableFeedback: enabled,
-                onTap: () {
-                  if (enabled) {
-                    Navigator.pushNamed(
-                      context,
-                      '/create-provider-profile',
-                      arguments: {'providerType': providerType},
-                    );
-                  }
-                },
-                child: Center(
-                  child: Column(children: [
-                    Padding(
-                        padding: const EdgeInsets.all(AppFontSizes.S),
-                        child: SvgPicture.asset(
-                          imageSource,
-                          height: 100,
-                        )),
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: enabled ? Colors.black : Colors.grey),
-                    ),
-                  ]),
-                ),
+              child: Center(
+                child: Column(children: [
+                  Padding(
+                      padding: const EdgeInsets.all(AppFontSizes.S),
+                      child: SvgPicture.asset(
+                        imageSource,
+                        height: 100,
+                      )),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: enabled ? Colors.black : Colors.grey),
+                  ),
+                ]),
               ),
             ),
           ),
